@@ -2,11 +2,12 @@ package rego
 
 import (
 	"regexp"
+	"fmt"
 )
 
 // Struct that allows interfacing with Regexp struct
 type Rego struct {
-	r	*regexp.Regexp
+	regex	*regexp.Regexp
 }
 
 // Contains data from a match
@@ -18,23 +19,63 @@ type Match struct {
 	End			map[int]int			// Maps group index -> end index of that group
 }
 
+// Constructs new Rego struct instance
 func Compile(t string) Rego {
 	return Rego{regexp.MustCompile(t)}
 }
 
 // Finds all capture groups and returns them as a string slice 
 func (r Rego) FindAllGroups(t string) []string {
-	return nil
+	// Find capture groups using built-in submatch function
+	submatches := r.regex.FindAllStringSubmatch(t, -1)
+
+	// Slice to hold groups taken from submatches found using built-in submatch function
+	var groups []string
+
+	// Iterate through submatches and parse capture groups from them
+	for _, slice := range(submatches) {
+		groups = append(groups, slice[1])
+	}
+
+	return groups
+}
+
+// Finds all capture groups and maps them to their names
+func (r Rego) FindAllNamedGroups(t string) map[string]string {
+	// Find capture groups using built-in submatch function
+	submatches := r.regex.FindAllStringSubmatch(t, -1)
+
+	// Get names of capture groups
+	names := r.regex.SubexpNames()
+
+	// Check that there are an equal number of names as capture groups
+	if len(submatches) != len(names) {
+		return nil
+	}
+
+	// Map of capture group names -> capture groups
+	namedGroups := make(map[string]string)
+
+	// Index of names. Starts at 1 since 0 is always blank
+	index := 1
+	fmt.Println(names)
+	// Iterate through matches to map the names to the text
+	for _, slice := range(submatches) {
+		namedGroups[names[index]] = slice[1]
+		index++
+	}
+
+	return namedGroups
 }
 
 // Finds all matches in given text and returns matches as string slice
 func (r Rego) FindAll(t string) []string {
-	return nil
+	return r.regex.FindAllString(t, -1)
 }
 
 // Returns true if there is a match in the given text
 func (r Rego) IsMatch(t string) bool {
-	return false
+	return r.regex.Match([]byte(t))
 }
 
 // Replaces source string found by regex with given replacement string
