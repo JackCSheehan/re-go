@@ -11,7 +11,8 @@ func main() {
 	t := `https://www.google.comhttps://www.nasa.gov`
 
 	// Compile regular expression
-	r, _ := rego.Compile(`(?P<protocol>https|http)://(?P<prefix>www).(?P<domain>\w+).(?P<toplevel>com|net|gov)`)
+	//r, _ := rego.Compile(`(?P<protocol>https|http)://(?P<prefix>www).(?P<domain>\w+).(?P<toplevel>com|net|gov)`)
+	r, _ := rego.Compile(`https`)
 
 	// Demo of built-in functions
 	fmt.Println(r.IsMatch(t))
@@ -22,4 +23,5 @@ func main() {
 	fmt.Println(r.Replace(t, "URL,"))
 	fmt.Println(r.ReadValidate())
 	fmt.Println(r.ReadSearch())
+	fmt.Println(r.Split(t))
 }

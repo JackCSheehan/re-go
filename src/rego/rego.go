@@ -100,6 +100,11 @@ func (r Rego) Replace(src, repl string) string {
 	return r.regex.ReplaceAllString(src, repl)
 }
 
+// Splits given string using regex and returns
+func (r Rego) Split(t string) []string {
+	return r.regex.Split(t, -1)
+}
+
 // Returns new slice of Match struct populated with data gatherd from given string
 func (r Rego) Matches(t string) []Match {
 	// Slice of matches parsed from given text
