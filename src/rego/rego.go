@@ -2,7 +2,6 @@ package rego
 
 import (
 	"regexp"
-	"fmt"
 )
 
 // Struct that allows interfacing with Regexp struct
@@ -41,28 +40,39 @@ func (r Rego) FindAllGroups(t string) []string {
 }
 
 // Finds all capture groups and maps them to their names
-func (r Rego) FindAllNamedGroups(t string) map[string]string {
+func (r Rego) FindAllNamedGroups(t string) []map[string]string {
 	// Find capture groups using built-in submatch function
 	submatches := r.regex.FindAllStringSubmatch(t, -1)
 
 	// Get names of capture groups
 	names := r.regex.SubexpNames()
 
-	// Check that there are an equal number of names as capture groups
-	if len(submatches) != len(names) {
-		return nil
-	}
-
 	// Map of capture group names -> capture groups
-	namedGroups := make(map[string]string)
+	var namedGroups []map[string]string
 
 	// Index of names. Starts at 1 since 0 is always blank
 	index := 1
-	fmt.Println(names)
+
+	// Map for the current match being parsed
+	currentMatch := make(map[string]string)
+
 	// Iterate through matches to map the names to the text
 	for _, slice := range(submatches) {
-		namedGroups[names[index]] = slice[1]
+		// Add current name/slice pair to current match map
+		currentMatch[names[index]] = slice[1]
 		index++
+
+		// When end of names has been reached
+		if index == len(names) {
+			// Reset index
+			index = 1
+
+			// Add current match map to named group slice
+			namedGroups = append(namedGroups, currentMatch)
+
+			// Reset current match
+			currentMatch = make(map[string]string)
+		}
 	}
 
 	return namedGroups
