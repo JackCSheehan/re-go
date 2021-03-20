@@ -22,8 +22,9 @@ type Match struct {
 }
 
 // Constructs new Rego struct instance
-func Compile(t string) Rego {
-	return Rego{regexp.MustCompile(t)}
+func Compile(t string) (Rego, error) {
+	r, err := regexp.Compile(t)
+	return Rego{r}, err
 }
 
 // Finds all capture groups and returns them as a string slice 

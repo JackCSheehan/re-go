@@ -7,9 +7,13 @@ import (
 )
 
 func main() {
+	// Text to find patterns in
 	t := `https://www.google.comhttps://www.nasa.gov`
 
-	r := rego.Compile(`(?P<protocol>https|http)://(?P<prefix>www).(?P<domain>\w+).(?P<toplevel>com|net|gov)`)
+	// Compile regular expression
+	r, _ := rego.Compile(`(?P<protocol>https|http)://(?P<prefix>www).(?P<domain>\w+).(?P<toplevel>com|net|gov)`)
+
+	// Demo of built-in functions
 	fmt.Println(r.IsMatch(t))
 	fmt.Println(r.FindAll(t))
 	fmt.Println(r.FindAllGroups(t))
