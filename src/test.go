@@ -30,9 +30,9 @@ func main() {
 	With a bare bodkin? Who would fardels bear,
 	To grunt and sweat under a weary life,`
 
-	r := rego.Compile(`'(?P<word>\w+)`)
-	fmt.Println(r.IsMatch(t))
-	fmt.Println(r.FindAll(t))
-	fmt.Println(r.FindAllGroups(t))
+	r := rego.Compile(`(?P<word>'\w+)(?P<fivechars>\w{5})`)
+	//fmt.Println(r.IsMatch(t))
+	//fmt.Println(r.FindAll(t))
+	//fmt.Println(r.FindAllGroups(t))
 	fmt.Println(r.FindAllNamedGroups(t))
 }

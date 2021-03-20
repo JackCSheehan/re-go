@@ -2,6 +2,7 @@ package rego
 
 import (
 	"regexp"
+	//"fmt"
 )
 
 // Struct that allows interfacing with Regexp struct
@@ -50,7 +51,7 @@ func (r Rego) FindAllNamedGroups(t string) []map[string]string {
 	// Map of capture group names -> capture groups
 	var namedGroups []map[string]string
 
-	// Index of names. Starts at 1 since 0 is always blank
+	// Index of matches and corresponding name
 	index := 1
 
 	// Map for the current match being parsed
@@ -58,11 +59,14 @@ func (r Rego) FindAllNamedGroups(t string) []map[string]string {
 
 	// Iterate through matches to map the names to the text
 	for _, slice := range(submatches) {
-		// Add current name/slice pair to current match map
-		currentMatch[names[index]] = slice[1]
-		index++
+		// Iterate through slice
+		for index < len(slice) {
+			// Map group name to corresponding capture group
+			currentMatch[names[index]] = slice[index]
+			index++
+		}
 
-		// When end of names has been reached
+		// When end of names/matches has been reached
 		if index == len(names) {
 			// Reset index
 			index = 1
