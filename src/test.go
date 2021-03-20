@@ -35,4 +35,5 @@ func main() {
 	//fmt.Println(r.FindAll(t))
 	//fmt.Println(r.FindAllGroups(t))
 	fmt.Println(r.FindAllNamedGroups(t))
+	fmt.Println(r.Matches(t))
 }

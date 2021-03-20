@@ -15,8 +15,8 @@ type Match struct {
 	Source		string				// String searched using regex
 	Groups		[]string			// Slice of capture groups found
 	NamedGroups	map[string]string	// Maps capture group names -> group contents	
-	Start		map[int]int			// Maps group index -> start index of that group
-	End			map[int]int			// Maps group index -> end index of that group
+	Start		int					// Start index of this match
+	End			int					// End index of this match
 }
 
 // Constructs new Rego struct instance
@@ -25,16 +25,16 @@ func Compile(t string) Rego {
 }
 
 // Finds all capture groups and returns them as a string slice 
-func (r Rego) FindAllGroups(t string) []string {
+func (r Rego) FindAllGroups(t string) [][]string {
 	// Find capture groups using built-in submatch function
 	submatches := r.regex.FindAllStringSubmatch(t, -1)
 
 	// Slice to hold groups taken from submatches found using built-in submatch function
-	var groups []string
+	var groups [][]string
 
 	// Iterate through submatches and parse capture groups from them
 	for _, slice := range(submatches) {
-		groups = append(groups, slice[1])
+		groups = append(groups, slice[1:])
 	}
 
 	return groups
@@ -93,13 +93,29 @@ func (r Rego) IsMatch(t string) bool {
 }
 
 // Replaces source string found by regex with given replacement string
-func (r Rego) Replace(src, repl string) error {
-	return nil
+func (r Rego) Replace(src, repl string) string {
+	return r.regex.ReplaceAllString(src, repl)
 }
 
-// Returns new Match struct populated with data gatherd from given string
-func (r Rego) Match(t string) Match {
-	return Match{"", nil, nil, nil, nil}
+// Returns new slice of Match struct populated with data gatherd from given string
+func (r Rego) Matches(t string) []Match {
+	// Slice of matches parsed from given text
+	var matches []Match
+
+	// Find data needed for
+	groups := r.FindAllGroups(t)
+	namedGroups := r.FindAllNamedGroups(t)
+
+	// Index to iterate through above collected data slices
+	index := 0
+
+	// Iterate through data collected above and create match instances
+	for index < len(namedGroups) {
+		matches = append(matches, Match{t, groups[index], namedGroups[index], 0, 0})
+		index++
+	}
+
+	return matches
 }
 
 // Tries to read given regex from stdin. Returns input and whether or not input matches regex
@@ -109,5 +125,5 @@ func (r Rego) ReadValidate() (string, bool) {
 
 // Reads any input from stdin. Returns input and Match struct made from input
 func (r Rego) ReadSearch() (string, Match) {
-	return "", Match{"", nil, nil, nil, nil}
+	return "", Match{"", nil, nil, 0, 0}
 }
