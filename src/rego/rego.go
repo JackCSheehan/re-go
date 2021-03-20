@@ -3,6 +3,8 @@ package rego
 import (
 	"regexp"
 	//"fmt"
+	"bufio"
+	"os"
 )
 
 // Struct that allows interfacing with Regexp struct
@@ -121,10 +123,30 @@ func (r Rego) Matches(t string) []Match {
 
 // Tries to read given regex from stdin. Returns input and whether or not input matches regex
 func (r Rego) ReadValidate() (string, bool) {
-	return "", false
+	// Create reader to read from console
+	reader := bufio.NewReader(os.Stdin)
+
+	// Get user input
+	input, _ := reader.ReadString('\n')
+
+	// Return true if the user's input matches regex
+	if r.IsMatch(input) {
+		return input, true
+	}
+
+	return input, false
 }
 
-// Reads any input from stdin. Returns input and Match struct made from input
-func (r Rego) ReadSearch() (string, Match) {
-	return "", Match{"", nil, nil, 0, 0}
+// Reads any input from stdin. Returns input and slice of Match structs made from input
+func (r Rego) ReadSearch() (string, []Match) {
+	// Create reader to read from console
+	reader := bufio.NewReader(os.Stdin)
+
+	// Get user input
+	input, _ := reader.ReadString('\n')
+
+	// Get list of matches from input
+	matches := r.Matches(input)
+
+	return input, matches
 }

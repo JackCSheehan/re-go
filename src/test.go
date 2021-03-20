@@ -15,4 +15,7 @@ func main() {
 	fmt.Println(r.FindAllGroups(t))
 	fmt.Println(r.FindAllNamedGroups(t))
 	fmt.Println(r.Matches(t))
+	fmt.Println(r.Replace(t, "URL,"))
+	fmt.Println(r.ReadValidate())
+	fmt.Println(r.ReadSearch())
 }
