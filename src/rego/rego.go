@@ -102,16 +102,17 @@ func (r Rego) Matches(t string) []Match {
 	// Slice of matches parsed from given text
 	var matches []Match
 
-	// Find data needed for
+	// Find data needed for matches slice
 	groups := r.FindAllGroups(t)
 	namedGroups := r.FindAllNamedGroups(t)
+	indices := r.regex.FindAllStringIndex(t, -1)
 
 	// Index to iterate through above collected data slices
 	index := 0
 
 	// Iterate through data collected above and create match instances
 	for index < len(namedGroups) {
-		matches = append(matches, Match{t, groups[index], namedGroups[index], 0, 0})
+		matches = append(matches,Match {t, groups[index], namedGroups[index], indices[index][0], indices[index][1]})
 		index++
 	}
 
