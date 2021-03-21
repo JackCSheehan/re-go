@@ -11,8 +11,7 @@ func main() {
 	t := `https://www.google.comhttps://www.nasa.gov`
 
 	// Compile regular expression
-	//r, _ := rego.Compile(`(?P<protocol>https|http)://(?P<prefix>www).(?P<domain>\w+).(?P<toplevel>com|net|gov)`)
-	r, _ := rego.Compile(`https`)
+	r, _ := rego.Compile(`(?P<protocol>https|http)://(?P<prefix>www).(?P<domain>\w+).(?P<toplevel>com|net|gov)`)
 
 	// Demo of Re-go functions
 	fmt.Println(r.IsMatch(t))

@@ -2,7 +2,6 @@ package rego
 
 import (
 	"regexp"
-	//"fmt"
 	"bufio"
 	"os"
 )
@@ -28,7 +27,7 @@ func Compile(t string) (Rego, error) {
 	return Rego{r}, err
 }
 
-// Finds all capture groups and returns them as a string slice 
+// Finds all capture groups and returns them as a slice of string slices
 func (r Rego) FindAllGroups(t string) [][]string {
 	// Find capture groups using built-in submatch function
 	submatches := r.regex.FindAllStringSubmatch(t, -1)
@@ -44,7 +43,7 @@ func (r Rego) FindAllGroups(t string) [][]string {
 	return groups
 }
 
-// Finds all capture groups and maps them to their names
+// Finds all named capture groups and maps their names to them
 func (r Rego) FindAllNamedGroups(t string) []map[string]string {
 	// Find capture groups using built-in submatch function
 	submatches := r.regex.FindAllStringSubmatch(t, -1)
@@ -92,7 +91,7 @@ func (r Rego) FindAll(t string) []string {
 }
 
 // Returns true if there is a match in the given text
-func (r Rego) IsMatch(t string) bool {
+func (r Rego) HasMatch(t string) bool {
 	return r.regex.Match([]byte(t))
 }
 
@@ -106,7 +105,7 @@ func (r Rego) Split(t string) []string {
 	return r.regex.Split(t, -1)
 }
 
-// Returns new slice of Match struct populated with data gatherd from given string
+// Returns new slice of Match structs populated with data gatherd from given string
 func (r Rego) Matches(t string) []Match {
 	// Slice of matches parsed from given text
 	var matches []Match
@@ -134,7 +133,7 @@ func (r Rego) Matches(t string) []Match {
 	return matches
 }
 
-// Tries to read given regex from stdin. Returns input and whether or not input matches regex
+// Reads given regex from stdin. Returns input and whether or not input matches regex
 func (r Rego) ReadValidate() (string, bool) {
 	// Create reader to read from console
 	reader := bufio.NewReader(os.Stdin)
@@ -143,7 +142,7 @@ func (r Rego) ReadValidate() (string, bool) {
 	input, _ := reader.ReadString('\n')
 
 	// Return true if the user's input matches regex
-	if r.IsMatch(input) {
+	if r.HasMatch(input) {
 		return input, true
 	}
 
