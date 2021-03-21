@@ -19,6 +19,7 @@ type Match struct {
 	NamedGroups	map[string]string	// Maps capture group names -> group contents	
 	Start		int					// Start index of this match
 	End			int					// End index of this match
+	Span		[2]int				// Span of this match
 }
 
 // Constructs new Rego struct instance
@@ -120,7 +121,13 @@ func (r Rego) Matches(t string) []Match {
 
 	// Iterate through data collected above and create match instances
 	for index < len(namedGroups) {
-		matches = append(matches,Match {t, groups[index], namedGroups[index], indices[index][0], indices[index][1]})
+		// Get start, end indices and form span array
+		start := indices[index][0]
+		end := indices[index][1]
+		span := [2]int{start, end}
+
+		// Create match struct for current match
+		matches = append(matches,Match {t, groups[index], namedGroups[index], start, end, span})
 		index++
 	}
 

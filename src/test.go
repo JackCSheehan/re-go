@@ -14,7 +14,7 @@ func main() {
 	//r, _ := rego.Compile(`(?P<protocol>https|http)://(?P<prefix>www).(?P<domain>\w+).(?P<toplevel>com|net|gov)`)
 	r, _ := rego.Compile(`https`)
 
-	// Demo of built-in functions
+	// Demo of Re-go functions
 	fmt.Println(r.IsMatch(t))
 	fmt.Println(r.FindAll(t))
 	fmt.Println(r.FindAllGroups(t))
